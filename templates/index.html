@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Laboratorio XSS - Inicio</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🔍 LAB XSS</a>
+            <nav>
+                <ul class="nav">
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/users">👥 Usuarios</a></li>
+                    <li><a href="/about">ℹ️ Acerca de</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Warning Banner -->
+    <div class="warning-banner">
+        ⚠️ ADVERTENCIA: Este laboratorio es INTENCIONALMENTE VULNERABLE | Solo para uso educativo
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="page-title animate-glow">🔍 Laboratorio de XSS</h1>
+        <p class="page-subtitle">Aprende sobre vulnerabilidades Cross-Site Scripting en un entorno seguro</p>
+
+        <!-- Introduction -->
+        <div class="info-box">
+            <div class="info-title">¿Qué es XSS (Cross-Site Scripting)?</div>
+            <p>XSS es una vulnerabilidad de seguridad web que permite a atacantes inyectar código JavaScript malicioso en páginas web vistas por otros usuarios. Este laboratorio te enseñará los tres tipos principales de XSS:</p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong style="color: #00d9ff;">Reflected XSS:</strong> El código malicioso se refleja inmediatamente en la respuesta</li>
+                <li><strong style="color: #00d9ff;">Stored XSS:</strong> El código se almacena y ejecuta cada vez que se carga</li>
+                <li><strong style="color: #00d9ff;">DOM-based XSS:</strong> La vulnerabilidad está en el código JavaScript del cliente</li>
+            </ul>
+        </div>
+
+        <!-- Exercises Grid -->
+        <h2 class="page-subtitle" style="margin-top: 3rem;">Ejercicios Disponibles</h2>
+        <div class="exercise-grid">
+            <!-- Exercise 1: Reflected XSS -->
+            <div class="exercise-card">
+                <span class="exercise-number">EJERCICIO 1</span>
+                <h3 class="exercise-title">🔄 Reflected XSS</h3>
+                <p class="exercise-description">
+                    Explota una vulnerabilidad de búsqueda que refleja el término buscado sin sanitizar. 
+                    El código se ejecuta inmediatamente pero no persiste.
+                </p>
+                <div class="exercise-payload">
+                    <div class="payload-label">💡 Payload Sugerido:</div>
+                    <code class="payload-code">&lt;script&gt;alert('XSS Reflected!')&lt;/script&gt;</code>
+                </div>
+                <a href="/reflected" class="btn">Iniciar Ejercicio →</a>
+            </div>
+
+            <!-- Exercise 2: Stored XSS -->
+            <div class="exercise-card">
+                <span class="exercise-number">EJERCICIO 2</span>
+                <h3 class="exercise-title">💾 Stored XSS</h3>
+                <p class="exercise-description">
+                    Inyecta código malicioso en un sistema de comentarios. El payload se almacena en 
+                    la base de datos y se ejecuta cada vez que alguien ve la página.
+                </p>
+                <div class="exercise-payload">
+                    <div class="payload-label">💡 Payload Sugerido:</div>
+                    <code class="payload-code">&lt;img src=x onerror=alert('Stored XSS!')&gt;</code>
+                </div>
+                <a href="/stored" class="btn">Iniciar Ejercicio →</a>
+            </div>
+
+            <!-- Exercise 3: DOM-based XSS -->
+            <div class="exercise-card">
+                <span class="exercise-number">EJERCICIO 3</span>
+                <h3 class="exercise-title">🌐 DOM-based XSS</h3>
+                <p class="exercise-description">
+                    Explota JavaScript del cliente que manipula el DOM de forma insegura usando 
+                    parámetros de la URL o fragments.
+                </p>
+                <div class="exercise-payload">
+                    <div class="payload-label">💡 Payload Sugerido:</div>
+                    <code class="payload-code">?name=&lt;img src=x onerror=alert('DOM XSS')&gt;</code>
+                </div>
+                <a href="/dom" class="btn">Iniciar Ejercicio →</a>
+            </div>
+
+            <!-- Exercise 4: Filter Bypass -->
+            <div class="exercise-card">
+                <span class="exercise-number">EJERCICIO 4</span>
+                <h3 class="exercise-title">🔓 Bypass de Filtros</h3>
+                <p class="exercise-description">
+                    La aplicación intenta bloquear XSS con filtros básicos. ¿Puedes encontrar 
+                    formas de evadirlos usando técnicas avanzadas?
+                </p>
+                <div class="exercise-payload">
+                    <div class="payload-label">💡 Payloads Sugeridos:</div>
+                    <code class="payload-code">&lt;ScRiPt&gt;alert('Bypass')&lt;/ScRiPt&gt;</code>
+                    <code class="payload-code" style="margin-top: 0.5rem;">&lt;img src=x onload=alert('Bypass')&gt;</code>
+                </div>
+                <a href="/bypass" class="btn">Iniciar Ejercicio →</a>
+            </div>
+        </div>
+
+        <!-- Additional Resources -->
+        <div class="info-box warning" style="margin-top: 3rem;">
+            <div class="info-title">📚 Recursos Adicionales</div>
+            <ul style="margin-left: 2rem; color: #8b949e; margin-top: 0.5rem;">
+                <li>Visita la página de <a href="/users" style="color: #00d9ff;">Usuarios de Prueba</a> para ver datos que podrías "robar" con XSS</li>
+                <li>Usa las herramientas de desarrollador de tu navegador (F12) para inspeccionar el código</li>
+                <li>Los payloads más simples suelen ser los más efectivos</li>
+                <li>Recuerda: esto es solo para aprendizaje, nunca uses XSS en sitios reales sin permiso</li>
+            </ul>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="info-box success" style="margin-top: 2rem;">
+            <div class="info-title">💡 Tips para Principiantes</div>
+            <ul style="margin-left: 2rem; color: #8b949e; margin-top: 0.5rem;">
+                <li><strong style="color: #00ff41;">Empieza simple:</strong> Usa payloads básicos como &lt;script&gt;alert(1)&lt;/script&gt;</li>
+                <li><strong style="color: #00ff41;">Observa el código:</strong> Usa "Ver código fuente" para entender cómo se renderiza tu input</li>
+                <li><strong style="color: #00ff41;">Prueba variaciones:</strong> Si un payload no funciona, intenta con eventos diferentes (onclick, onerror, onload)</li>
+                <li><strong style="color: #00ff41;">Usa la consola:</strong> La consola del navegador te mostrará errores de JavaScript</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>🔐 Laboratorio XSS Educativo | Desarrollado para fines académicos</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">⚠️ Nunca uses estas técnicas en aplicaciones reales sin autorización</p>
+    </footer>
+
+    <script>
+        // Mensaje de bienvenida en consola
+        console.log('%c🔍 Laboratorio XSS - Sistema Vulnerable', 'color: #00ff41; font-size: 20px; font-weight: bold;');
+        console.log('%c⚠️  Este sistema es intencionalmente vulnerable para fines educativos', 'color: #ffaa00; font-size: 14px;');
+        console.log('%c💡 Usa las herramientas de desarrollador para inspeccionar el código', 'color: #00d9ff; font-size: 12px;');
+    </script>
+</body>
+</html>

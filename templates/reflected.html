@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 1: Reflected XSS</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🔍 LAB XSS</a>
+            <nav>
+                <ul class="nav">
+                    <li><a href="/">← Volver al Inicio</a></li>
+                    <li><a href="/users">👥 Usuarios</a></li>
+                    <li><a href="/about">ℹ️ Acerca de</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">🔄 Ejercicio 1: Reflected XSS</h1>
+        <p class="page-subtitle">Explota una vulnerabilidad de búsqueda que refleja tu input sin sanitizar</p>
+
+        <!-- Instructions -->
+        <div class="info-box">
+            <div class="info-title">📋 Instrucciones</div>
+            <p>Esta página tiene un buscador de productos vulnerable. Tu objetivo es inyectar código JavaScript que se ejecute cuando se muestre el resultado de la búsqueda.</p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong style="color: #00d9ff;">Objetivo:</strong> Ejecutar JavaScript usando el campo de búsqueda</li>
+                <li><strong style="color: #00d9ff;">Tipo:</strong> Reflected XSS (no persiste en la base de datos)</li>
+                <li><strong style="color: #00d9ff;">Vulnerabilidad:</strong> El término de búsqueda se refleja directamente en la página sin escape HTML</li>
+            </ul>
+        </div>
+
+        <!-- Payloads Sugeridos -->
+        <div class="info-box success">
+            <div class="info-title">💡 Payloads Sugeridos</div>
+            <div style="margin-top: 1rem;">
+                <p style="color: #8b949e; margin-bottom: 0.5rem;">Prueba estos payloads copiándolos en el campo de búsqueda:</p>
+                <div class="code-block">
+                    <code>&lt;script&gt;alert('XSS Reflected!')&lt;/script&gt;</code>
+                </div>
+                <div class="code-block">
+                    <code>&lt;img src=x onerror=alert('XSS!')&gt;</code>
+                </div>
+                <div class="code-block">
+                    <code>&lt;svg onload=alert('XSS')&gt;</code>
+                </div>
+                <div class="code-block">
+                    <code>&lt;body onload=alert('XSS')&gt;</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Form -->
+        <div class="search-box">
+            <h2 style="color: #00d9ff; margin-bottom: 1.5rem;">🔍 Buscador de Productos</h2>
+            <form method="POST" action="/reflected">
+                <div class="form-group">
+                    <label class="form-label">Buscar producto:</label>
+                    <input type="text" name="search" class="form-input" 
+                           placeholder="Ejemplo: laptop, mouse, teclado..." 
+                           value="{{ query }}" autofocus>
+                </div>
+                <button type="submit" class="btn">Buscar</button>
+            </form>
+        </div>
+
+        <!-- Results Section -->
+        {% if query %}
+        <div class="results-container">
+            <h3 style="color: #00d9ff; margin-bottom: 1rem;">Resultados de Búsqueda</h3>
+            
+            <!-- ⚠️ VULNERABLE: Mostrando mensaje sin escape -->
+            <div class="result-message">
+                {{ mensaje }}
+            </div>
+
+            {% if results %}
+            <ul class="result-list">
+                {% for producto in results %}
+                <li class="result-item">
+                    ✓ {{ producto }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Educational Info -->
+        <div class="info-box warning" style="margin-top: 3rem;">
+            <div class="info-title">🎓 Explicación Técnica</div>
+            <p><strong>¿Por qué funciona este ataque?</strong></p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li>El servidor recibe tu búsqueda y la incluye directamente en el HTML de respuesta</li>
+                <li>No se aplica ningún tipo de escape o sanitización al input del usuario</li>
+                <li>El navegador interpreta tu input como código HTML/JavaScript válido</li>
+                <li>El código se ejecuta en el contexto del dominio vulnerable</li>
+            </ul>
+            <p style="margin-top: 1rem;"><strong>Impacto en el mundo real:</strong></p>
+            <ul style="margin-top: 0.5rem; margin-left: 2rem; color: #8b949e;">
+                <li>Robo de cookies de sesión: <code style="color: #00ff41;">document.cookie</code></li>
+                <li>Redireccionamiento a sitios maliciosos</li>
+                <li>Modificación del contenido de la página</li>
+                <li>Captura de teclas (keylogging)</li>
+            </ul>
+        </div>
+
+        <!-- Defense -->
+        <div class="info-box danger" style="margin-top: 2rem;">
+            <div class="info-title">🛡️ ¿Cómo Prevenir Reflected XSS?</div>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong style="color: #ff4444;">Escape HTML:</strong> Convertir caracteres especiales (&lt; &gt; " ' &amp;)</li>
+                <li><strong style="color: #ff4444;">Validación de entrada:</strong> Verificar que el input cumple el formato esperado</li>
+                <li><strong style="color: #ff4444;">Content Security Policy:</strong> Usar headers CSP para bloquear scripts inline</li>
+                <li><strong style="color: #ff4444;">Encoding contextual:</strong> Aplicar el encoding apropiado según el contexto (HTML, JavaScript, URL)</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>🔐 Ejercicio 1: Reflected XSS | <a href="/" style="color: #00d9ff;">Volver al menú principal</a></p>
+    </footer>
+
+    <script>
+        // Mensaje educativo en consola
+        console.log('%c🔄 Ejercicio 1: Reflected XSS', 'color: #00ff41; font-size: 18px; font-weight: bold;');
+        console.log('%cEsta página es vulnerable a Reflected XSS', 'color: #ffaa00; font-size: 12px;');
+        
+        // Detectar si se ejecutó XSS
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('query');
+        
+        if (query && (query.includes('<script>') || query.includes('onerror') || query.includes('onload'))) {
+            console.log('%c💥 ¡Posible payload XSS detectado!', 'color: #ff4444; font-size: 14px; font-weight: bold;');
+            console.log('%cPayload recibido:', 'color: #00d9ff;', query);
+        }
+
+        // Override alert para mostrar mensaje educativo
+        const originalAlert = window.alert;
+        window.alert = function(message) {
+            console.log('%c🎉 ¡XSS EXITOSO!', 'color: #00ff41; font-size: 20px; font-weight: bold;');
+            console.log('%c✓ Has ejecutado JavaScript en el contexto de la aplicación', 'color: #00ff41; font-size: 14px;');
+            console.log('%c💡 En un sitio real, podrías:', 'color: #00d9ff; font-size: 12px;');
+            console.log('  • Robar cookies: document.cookie');
+            console.log('  • Redirigir: window.location');
+            console.log('  • Modificar la página: document.body.innerHTML');
+            originalAlert('✅ ¡XSS EXITOSO!\n\n' + message + '\n\n¡Felicitaciones! Has completado el Ejercicio 1.');
+        };
+    </script>
+</body>
+</html>

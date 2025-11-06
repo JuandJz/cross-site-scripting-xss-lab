@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 3: DOM-based XSS</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🔍 LAB XSS</a>
+            <nav>
+                <ul class="nav">
+                    <li><a href="/">← Volver al Inicio</a></li>
+                    <li><a href="/users">👥 Usuarios</a></li>
+                    <li><a href="/about">ℹ️ Acerca de</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">🌐 Ejercicio 3: DOM-based XSS</h1>
+        <p class="page-subtitle">Explota JavaScript del cliente que manipula el DOM de forma insegura</p>
+
+        <!-- Instructions -->
+        <div class="info-box">
+            <div class="info-title">📋 Instrucciones</div>
+            <p>Esta página usa JavaScript para leer parámetros de la URL y actualizar el contenido del DOM de forma insegura. La vulnerabilidad está completamente en el lado del cliente.</p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong style="color: #00d9ff;">Objetivo:</strong> Ejecutar JavaScript manipulando parámetros de URL</li>
+                <li><strong style="color: #00d9ff;">Tipo:</strong> DOM-based XSS (vulnerabilidad en JavaScript del cliente)</li>
+                <li><strong style="color: #00d9ff;">Vulnerabilidad:</strong> JavaScript usa innerHTML con datos no validados</li>
+                <li><strong style="color: #00d9ff;">Diferencia:</strong> El servidor NO procesa el payload, todo ocurre en el navegador</li>
+            </ul>
+        </div>
+
+        <!-- Payloads Sugeridos -->
+        <div class="info-box success">
+            <div class="info-title">💡 Payloads Sugeridos</div>
+            <div style="margin-top: 1rem;">
+                <p style="color: #8b949e; margin-bottom: 0.5rem;">Añade estos parámetros a la URL:</p>
+                <div class="code-block">
+                    <code>?name=&lt;img src=x onerror=alert('DOM XSS')&gt;</code>
+                </div>
+                <div class="code-block">
+                    <code>?name=&lt;svg onload=alert('DOM XSS')&gt;</code>
+                </div>
+                <div class="code-block">
+                    <code>?name=&lt;iframe src=javascript:alert('DOM')&gt;</code>
+                </div>
+                <div class="code-block">
+                    <code>#&lt;img src=x onerror=alert('Fragment XSS')&gt;</code>
+                </div>
+            </div>
+            <div style="margin-top: 1rem;">
+                <p style="color: #8b949e; margin-bottom: 0.5rem;">O usa estos botones de prueba rápida:</p>
+                <button onclick="testXSS1()" class="btn" style="margin-right: 0.5rem;">Prueba 1: IMG</button>
+                <button onclick="testXSS2()" class="btn btn-secondary" style="margin-right: 0.5rem;">Prueba 2: SVG</button>
+                <button onclick="testXSS3()" class="btn btn-secondary">Prueba 3: IFRAME</button>
+            </div>
+        </div>
+
+        <!-- Profile Display Area -->
+        <div class="search-box">
+            <h2 style="color: #00d9ff; margin-bottom: 1.5rem;">👤 Perfil de Usuario</h2>
+            
+            <div id="profile-container" class="info-box">
+                <div id="welcome-message" style="font-size: 1.2rem; color: #00ff41;">
+                    <!-- El JavaScript vulnerable insertará contenido aquí -->
+                </div>
+                <div id="user-info" style="margin-top: 1rem; color: #8b949e;">
+                    <!-- Información adicional del usuario -->
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+                <p style="color: #8b949e; margin-bottom: 1rem;">Personaliza tu saludo agregando un parámetro "name" a la URL:</p>
+                <div class="form-group">
+                    <input type="text" id="name-input" class="form-input" 
+                           placeholder="Ingresa tu nombre y presiona Enter">
+                </div>
+            </div>
+        </div>
+
+        <!-- URL Fragment Demo -->
+        <div class="search-box" style="margin-top: 2rem;">
+            <h2 style="color: #00d9ff; margin-bottom: 1.5rem;">🔗 Prueba con Fragments (#)</h2>
+            <p style="color: #8b949e; margin-bottom: 1rem;">Los fragments (después de #) también pueden ser vulnerables:</p>
+            <div id="fragment-display" class="info-box">
+                <!-- JavaScript vulnerable insertará el fragment aquí -->
+            </div>
+            <button onclick="demoFragment()" class="btn">Demostración Fragment XSS</button>
+        </div>
+
+        <!-- Educational Info -->
+        <div class="info-box warning" style="margin-top: 3rem;">
+            <div class="info-title">🎓 Explicación Técnica</div>
+            <p><strong>¿Qué hace diferente al DOM-based XSS?</strong></p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong>Cliente-side:</strong> La vulnerabilidad está en JavaScript del navegador, no en el servidor</li>
+                <li><strong>No visible en logs:</strong> Los payloads en fragments (#) no se envían al servidor</li>
+                <li><strong>Difícil de detectar:</strong> WAFs y filtros del servidor no lo ven</li>
+                <li><strong>Fuentes peligrosas:</strong> location.href, location.hash, location.search, document.URL</li>
+                <li><strong>Sumideros peligrosos:</strong> innerHTML, document.write, eval, setTimeout</li>
+            </ul>
+            <p style="margin-top: 1rem;"><strong>Código vulnerable típico:</strong></p>
+            <div class="code-block" style="margin-top: 0.5rem;">
+                <code>// ⚠️ VULNERABLE
+const name = new URLSearchParams(location.search).get('name');
+document.getElementById('welcome').innerHTML = 'Hola ' + name;
+
+// ❌ También vulnerable
+const hash = location.hash.substring(1);
+document.write(hash);</code>
+            </div>
+        </div>
+
+        <!-- Defense -->
+        <div class="info-box danger" style="margin-top: 2rem;">
+            <div class="info-title">🛡️ ¿Cómo Prevenir DOM-based XSS?</div>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong style="color: #ff4444;">Usar textContent en vez de innerHTML:</strong> Inserta como texto, no como HTML</li>
+                <li><strong style="color: #ff4444;">Validar input del cliente:</strong> Verificar formato antes de usar</li>
+                <li><strong style="color: #ff4444;">Evitar eval y similares:</strong> No usar eval(), Function(), setTimeout con strings</li>
+                <li><strong style="color: #ff4444;">Sanitizar con DOMPurify:</strong> Biblioteca especializada para limpiar HTML</li>
+                <li><strong style="color: #ff4444;">Content Security Policy:</strong> Bloquear inline scripts y eval</li>
+                <li><strong style="color: #ff4444;">Trusted Types API:</strong> Prevenir asignaciones peligrosas al DOM</li>
+            </ul>
+        </div>
+
+        <!-- Code Example -->
+        <div class="info-box" style="margin-top: 2rem;">
+            <div class="info-title">👀 Ver Código Vulnerable</div>
+            <p style="margin-bottom: 1rem;">Inspecciona el código JavaScript de esta página (F12 > Sources) o mira aquí:</p>
+            <div class="code-block">
+                <code>// Este es el código vulnerable en esta página:
+function updateProfile() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('name') || 'Invitado';
+    
+    // ⚠️ VULNERABLE: Usando innerHTML con input del usuario
+    document.getElementById('welcome-message').innerHTML = 
+        '¡Bienvenido, ' + name + '!';
+}
+
+// ⚠️ También vulnerable con fragments
+function updateFragment() {
+    const fragment = window.location.hash.substring(1);
+    if (fragment) {
+        document.getElementById('fragment-display').innerHTML = fragment;
+    }
+}</code>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>🔐 Ejercicio 3: DOM-based XSS | <a href="/" style="color: #00d9ff;">Volver al menú principal</a></p>
+    </footer>
+
+    <script>
+        // Mensaje educativo en consola
+        console.log('%c🌐 Ejercicio 3: DOM-based XSS', 'color: #00ff41; font-size: 18px; font-weight: bold;');
+        console.log('%cEsta página tiene vulnerabilidades DOM-based XSS', 'color: #ffaa00; font-size: 12px;');
+        console.log('%c⚠️  El JavaScript usa innerHTML con datos de la URL sin sanitizar', 'color: #ff4444; font-size: 12px;');
+
+        // ⚠️ FUNCIÓN VULNERABLE 1: Lee parámetro "name" de la URL
+        function updateProfile() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get('name');
+            
+            if (name) {
+                // ⚠️ VULNERABLE: innerHTML con input del usuario
+                document.getElementById('welcome-message').innerHTML = 
+                    '¡Bienvenido, <strong>' + name + '</strong>!';
+                
+                document.getElementById('user-info').innerHTML = 
+                    'Usuario identificado desde parámetros de URL';
+                    
+                console.log('%c⚠️  Payload detectado en URL:', 'color: #ffaa00; font-size: 12px;', name);
+            } else {
+                document.getElementById('welcome-message').textContent = 
+                    '¡Bienvenido, Invitado!';
+                document.getElementById('user-info').innerHTML = 
+                    'Agrega ?name=TuNombre a la URL para personalizar';
+            }
+        }
+
+        // ⚠️ FUNCIÓN VULNERABLE 2: Lee fragment (#) de la URL
+        function updateFragment() {
+            const fragment = window.location.hash.substring(1);
+            if (fragment) {
+                // ⚠️ VULNERABLE: innerHTML con fragment
+                document.getElementById('fragment-display').innerHTML = 
+                    'Fragment detectado: <strong>' + fragment + '</strong>';
+                console.log('%c⚠️  Fragment detectado:', 'color: #ffaa00; font-size: 12px;', fragment);
+            } else {
+                document.getElementById('fragment-display').textContent = 
+                    'No hay fragment en la URL. Añade #texto para ver cómo se procesa.';
+            }
+        }
+
+        // Input handler
+        document.getElementById('name-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const name = this.value;
+                window.location.search = '?name=' + encodeURIComponent(name);
+            }
+        });
+
+        // Botones de prueba
+        function testXSS1() {
+            window.location.search = '?name=' + encodeURIComponent('<img src=x onerror=alert("DOM XSS!")>');
+        }
+
+        function testXSS2() {
+            window.location.search = '?name=' + encodeURIComponent('<svg onload=alert("SVG XSS!")>');
+        }
+
+        function testXSS3() {
+            window.location.search = '?name=' + encodeURIComponent('<iframe src="javascript:alert(\'IFRAME XSS!\')">');
+        }
+
+        function demoFragment() {
+            window.location.hash = '#<img src=x onerror=alert("Fragment XSS!")>';
+        }
+
+        // Override alert para mensajes educativos
+        const originalAlert = window.alert;
+        window.alert = function(message) {
+            console.log('%c🎉 ¡DOM-BASED XSS EXITOSO!', 'color: #00ff41; font-size: 20px; font-weight: bold;');
+            console.log('%c✓ Has explotado una vulnerabilidad DOM-based', 'color: #00ff41; font-size: 14px;');
+            console.log('%c💡 Nota: El servidor NUNCA vio tu payload', 'color: #00d9ff; font-size: 12px;');
+            console.log('%c⚠️  Todo ocurrió en el JavaScript del navegador', 'color: #ffaa00; font-size: 12px;');
+            originalAlert('✅ ¡DOM-BASED XSS EXITOSO!\n\n' + message + '\n\n¡Felicitaciones! Has explotado JavaScript vulnerable del lado del cliente.');
+        };
+
+        // Ejecutar al cargar
+        updateProfile();
+        updateFragment();
+
+        // Actualizar si cambia el hash
+        window.addEventListener('hashchange', updateFragment);
+    </script>
+</body>
+</html>

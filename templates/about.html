@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acerca del Laboratorio</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🔍 LAB XSS</a>
+            <nav>
+                <ul class="nav">
+                    <li><a href="/">← Volver al Inicio</a></li>
+                    <li><a href="/users">👥 Usuarios</a></li>
+                    <li><a href="/about">ℹ️ Acerca de</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">ℹ️ Acerca del Laboratorio XSS</h1>
+        <p class="page-subtitle">Sistema educativo para aprender sobre vulnerabilidades Cross-Site Scripting</p>
+
+        <!-- Overview -->
+        <div class="info-box">
+            <div class="info-title">📚 ¿Qué es este Laboratorio?</div>
+            <p>Este es un entorno de aprendizaje <strong>INTENCIONALMENTE VULNERABLE</strong> diseñado para enseñar sobre vulnerabilidades XSS (Cross-Site Scripting) de forma práctica y segura.</p>
+            <p style="margin-top: 1rem;">Los estudiantes pueden experimentar con diferentes tipos de ataques XSS sin riesgo de dañar sistemas reales, aprendiendo tanto las técnicas de explotación como las mejores prácticas de defensa.</p>
+        </div>
+
+        <!-- Exercises -->
+        <div class="info-box success" style="margin-top: 2rem;">
+            <div class="info-title">🎯 Ejercicios Disponibles</div>
+            <div style="margin-top: 1rem;">
+                <p><strong style="color: #00ff41;">1. Reflected XSS</strong></p>
+                <ul style="margin-left: 2rem; color: #8b949e; margin-top: 0.5rem;">
+                    <li>Nivel: Principiante</li>
+                    <li>Objetivo: Ejecutar JavaScript reflejado en la respuesta</li>
+                    <li>Aprenderás: Cómo el input del usuario se refleja sin sanitizar</li>
+                </ul>
+
+                <p style="margin-top: 1rem;"><strong style="color: #00ff41;">2. Stored XSS</strong></p>
+                <ul style="margin-left: 2rem; color: #8b949e; margin-top: 0.5rem;">
+                    <li>Nivel: Principiante-Intermedio</li>
+                    <li>Objetivo: Almacenar código malicioso que persista</li>
+                    <li>Aprenderás: Impacto de XSS persistente en múltiples usuarios</li>
+                </ul>
+
+                <p style="margin-top: 1rem;"><strong style="color: #00ff41;">3. DOM-based XSS</strong></p>
+                <ul style="margin-left: 2rem; color: #8b949e; margin-top: 0.5rem;">
+                    <li>Nivel: Intermedio</li>
+                    <li>Objetivo: Explotar JavaScript vulnerable del lado del cliente</li>
+                    <li>Aprenderás: Cómo el código JavaScript inseguro crea vulnerabilidades</li>
+                </ul>
+
+                <p style="margin-top: 1rem;"><strong style="color: #00ff41;">4. Bypass de Filtros</strong></p>
+                <ul style="margin-left: 2rem; color: #8b949e; margin-top: 0.5rem;">
+                    <li>Nivel: Intermedio-Avanzado</li>
+                    <li>Objetivo: Evadir filtros de seguridad básicos</li>
+                    <li>Aprenderás: Por qué las blacklists no son suficientes</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Technologies -->
+        <div class="info-box" style="margin-top: 2rem;">
+            <div class="info-title">⚙️ Tecnologías Utilizadas</div>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong style="color: #00d9ff;">Backend:</strong> FastAPI (Python 3.8+)</li>
+                <li><strong style="color: #00d9ff;">Base de Datos:</strong> SQLite</li>
+                <li><strong style="color: #00d9ff;">Templates:</strong> Jinja2 (con autoescape deshabilitado intencionalmente)</li>
+                <li><strong style="color: #00d9ff;">Frontend:</strong> HTML5, CSS3, JavaScript vanilla</li>
+                <li><strong style="color: #00d9ff;">Estilo:</strong> Tema hacker personalizado (negro/verde/azul cyber)</li>
+            </ul>
+        </div>
+
+        <!-- Security Notice -->
+        <div class="info-box danger" style="margin-top: 2rem;">
+            <div class="info-title">⚠️ ADVERTENCIAS DE SEGURIDAD</div>
+            <p><strong>Esta aplicación es INTENCIONALMENTE VULNERABLE. NO la uses en producción ni la expongas a internet.</strong></p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li>✓ Solo para uso educativo en entornos controlados</li>
+                <li>✓ Ejecuta en localhost o en una red aislada</li>
+                <li>✓ NO uses datos reales o sensibles</li>
+                <li>✓ NO intentes estas técnicas en sitios web reales sin autorización</li>
+                <li>✓ El hacking ético requiere PERMISO EXPLÍCITO</li>
+            </ul>
+        </div>
+
+        <!-- Learning Resources -->
+        <div class="info-box" style="margin-top: 2rem;">
+            <div class="info-title">📖 Recursos de Aprendizaje</div>
+            <p><strong>Conceptos Importantes:</strong></p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong style="color: #00d9ff;">XSS (Cross-Site Scripting):</strong> Inyección de código JavaScript en páginas web</li>
+                <li><strong style="color: #00d9ff;">Sanitización:</strong> Limpieza de input del usuario para eliminar código malicioso</li>
+                <li><strong style="color: #00d9ff;">Escape HTML:</strong> Convertir caracteres especiales (&lt; &gt; &amp; " ') en entidades HTML</li>
+                <li><strong style="color: #00d9ff;">Content Security Policy (CSP):</strong> Header de seguridad que restringe recursos</li>
+                <li><strong style="color: #00d9ff;">HTTPOnly Cookies:</strong> Cookies no accesibles desde JavaScript</li>
+            </ul>
+
+            <p style="margin-top: 1.5rem;"><strong>Recursos Externos Recomendados:</strong></p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li>OWASP XSS Prevention Cheat Sheet</li>
+                <li>PortSwigger Web Security Academy</li>
+                <li>HackTheBox / TryHackMe (plataformas de práctica legal)</li>
+                <li>OWASP Top 10 (lista de vulnerabilidades críticas)</li>
+            </ul>
+        </div>
+
+        <!-- Ethical Guidelines -->
+        <div class="info-box warning" style="margin-top: 2rem;">
+            <div class="info-title">🤝 Directrices de Hacking Ético</div>
+            <p><strong>Si estás interesado en ciberseguridad, sigue estas reglas:</strong></p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong style="color: #ffaa00;">Obtén permiso:</strong> NUNCA pruebes en sistemas sin autorización explícita</li>
+                <li><strong style="color: #ffaa00;">Respeta la ley:</strong> El hacking sin permiso es ilegal en prácticamente todos los países</li>
+                <li><strong style="color: #ffaa00;">Usa laboratorios legales:</strong> HackTheBox, TryHackMe, VulnHub, DVWA</li>
+                <li><strong style="color: #ffaa00;">Reporta responsablemente:</strong> Si encuentras una vulnerabilidad real, repórtala al propietario</li>
+                <li><strong style="color: #ffaa00;">Aprende para defender:</strong> El objetivo es proteger sistemas, no dañarlos</li>
+                <li><strong style="color: #ffaa00;">Mantén la confidencialidad:</strong> No compartas vulnerabilidades sin resolver públicamente</li>
+            </ul>
+        </div>
+
+        <!-- Technical Details -->
+        <div class="info-box" style="margin-top: 2rem;">
+            <div class="info-title">🔧 Detalles Técnicos del Laboratorio</div>
+            <p><strong>Configuraciones Inseguras Intencionales:</strong></p>
+            <div class="code-block" style="margin-top: 1rem;">
+                <code># Templates Jinja2 sin autoescape
+templates.env.autoescape = False
+
+# Headers de seguridad deshabilitados
+X-XSS-Protection: 0
+X-Frame-Options: ALLOW
+
+# Sin Content Security Policy
+# (No hay header CSP configurado)
+
+# Cookies sin protección
+# (No hay flags HTTPOnly, Secure, SameSite)</code>
+            </div>
+
+            <p style="margin-top: 1.5rem;"><strong>¿Cómo debería configurarse en producción?</strong></p>
+            <div class="code-block">
+                <code># Templates Jinja2 con autoescape
+templates.env.autoescape = True
+
+# Headers de seguridad habilitados
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: default-src 'self'
+
+# Cookies seguras
+Set-Cookie: session=...; HttpOnly; Secure; SameSite=Strict</code>
+            </div>
+        </div>
+
+        <!-- Contributors -->
+        <div class="info-box success" style="margin-top: 2rem;">
+            <div class="info-title">👨‍💻 Información del Proyecto</div>
+            <p><strong>Desarrollado para:</strong> Estudiantes de Ingeniería de Sistemas (7° Semestre)</p>
+            <p><strong>Curso:</strong> Ciberseguridad</p>
+            <p><strong>Objetivo:</strong> Aprendizaje práctico de vulnerabilidades web y técnicas de defensa</p>
+            <p style="margin-top: 1rem;"><strong>Tecnología:</strong></p>
+            <ul style="margin-left: 2rem; color: #8b949e; margin-top: 0.5rem;">
+                <li>FastAPI - Framework web moderno y rápido</li>
+                <li>SQLite - Base de datos ligera y portátil</li>
+                <li>Python 3.8+ - Lenguaje de programación</li>
+                <li>HTML/CSS/JS - Frontend web estándar</li>
+            </ul>
+        </div>
+
+        <!-- Installation -->
+        <div class="info-box" style="margin-top: 2rem;">
+            <div class="info-title">💻 Instalación y Uso</div>
+            <div class="code-block" style="margin-top: 1rem;">
+                <code># 1. Clonar o descargar el repositorio
+cd xss-injection-lab
+
+# 2. Instalar dependencias
+pip install -r requirements.txt
+
+# 3. Ejecutar el servidor
+python main.py
+
+# 4. Abrir en navegador
+# http://localhost:8000</code>
+            </div>
+        </div>
+
+        <!-- Support -->
+        <div class="info-box" style="margin-top: 2rem;">
+            <div class="info-title">❓ Soporte y Preguntas</div>
+            <p>Si tienes preguntas sobre el laboratorio o encuentras problemas:</p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li>Consulta con tu profesor o instructor</li>
+                <li>Revisa la documentación en el README.md</li>
+                <li>Usa las herramientas de desarrollador del navegador (F12) para debugging</li>
+                <li>Consulta los mensajes en la consola JavaScript</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>🔐 Laboratorio XSS Educativo | <a href="/" style="color: #00d9ff;">Volver al menú principal</a></p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Desarrollado con fines educativos | FastAPI + Python</p>
+    </footer>
+
+    <script>
+        console.log('%cℹ️  Acerca del Laboratorio XSS', 'color: #00ff41; font-size: 18px; font-weight: bold;');
+        console.log('%c🎓 Sistema educativo para aprender sobre vulnerabilidades XSS', 'color: #00d9ff; font-size: 12px;');
+        console.log('%c⚠️  Recuerda: Solo usa estas técnicas en entornos autorizados', 'color: #ffaa00; font-size: 12px;');
+    </script>
+</body>
+</html>

