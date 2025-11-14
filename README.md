@@ -92,22 +92,6 @@ http://localhost:8000
    - Entiende qué datos pueden ser robados con XSS
    - Visualiza el impacto de un ataque exitoso
 
-### Para Profesores
-
-1. **Preparación de la Clase**
-   - Ejecuta el laboratorio en una red local aislada
-   - Verifica que todos los estudiantes puedan acceder
-   - Prepara ejemplos de demostración
-
-2. **Durante la Clase**
-   - Guía a los estudiantes a través de cada ejercicio
-   - Explica los conceptos técnicos detrás de cada vulnerabilidad
-   - Discute las implicaciones de seguridad del mundo real
-
-3. **Evaluación**
-   - Pide a los estudiantes que documenten payloads exitosos
-   - Solicita explicaciones de por qué funcionan
-   - Pide propuestas de mitigación
 
 ## 🎓 Estructura del Proyecto
 
@@ -273,45 +257,6 @@ El uso indebido de técnicas de hacking es ilegal en prácticamente todas las ju
 - Multas significativas
 - Tiempo en prisión
 - Antecedentes penales
-
-## 👨‍🏫 Para Instructores
-
-### Sugerencias de Clase
-
-1. **Introducción (15 min)**
-   - Explicar qué es XSS y por qué es importante
-   - Mostrar ejemplos del mundo real
-   - Demostrar el laboratorio
-
-2. **Práctica Guiada (30 min)**
-   - Ejercicio 1 y 2 con toda la clase
-   - Discutir cada payload que funciona
-
-3. **Práctica Independiente (45 min)**
-   - Estudiantes completan ejercicios 3 y 4
-   - Profesor circula y ayuda
-
-4. **Discusión (30 min)**
-   - ¿Qué aprendieron?
-   - ¿Cómo se defienden contra XSS?
-   - Casos de estudio del mundo real
-
-### Evaluación Sugerida
-
-- Documentar 3 payloads únicos por ejercicio
-- Explicar por qué cada payload funciona
-- Proponer 3 métodos de mitigación
-- Ensayo corto sobre impacto de XSS en aplicaciones reales
-
-## 🔄 Actualizaciones y Mejoras
-
-### Características Futuras Planeadas
-
-- [ ] Ejercicio de XSS en contexto JSON
-- [ ] XSS en formularios de file upload
-- [ ] mXSS (Mutation XSS)
-- [ ] Sistema de puntuación/progreso
-- [ ] Modo de competencia entre estudiantes
 
 ## 📝 Licencia
 
