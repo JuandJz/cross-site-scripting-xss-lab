@@ -236,6 +236,126 @@ ejecutarse repetidamente sin intervención del usuario.
 El payload elegido fue especialmente problemático debido a la combinación de autofocus + onfocus, lo cual generó un loop de ejecución automática.
 
 
+´´´´
+Ejercicio 3 — DOM-based XSS (Resultados Reales del Laboratorio)
+Descripción
+
+En este ejercicio la vulnerabilidad ocurre totalmente en el navegador, no en el servidor.
+La página toma parámetros de la URL y los inserta en el DOM usando:
+
+innerHTML (punto vulnerable)
+
+location.search y location.hash
+
+No hay sanitización.
+El servidor no procesa el payload, solo lo entrega como está.
+
+Código vulnerable
+
+Este es exactamente el código que genera la vulnerabilidad:
+
+function updateProfile() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('name') || 'Invitado';
+
+    // Vulnerable
+    document.getElementById('welcome-message').innerHTML = '¡Bienvenido, ' + name + '!';
+}
+
+function updateFragment() {
+    const fragment = window.location.hash.substring(1);
+
+    if (fragment) {
+        // Vulnerable
+        document.getElementById('fragment-display').innerHTML = fragment;
+    }
+}
+
+Objetivo
+
+Ejecutar JavaScript inyectando código malicioso en los parámetros de:
+
+?name=
+
+#fragment
+
+Resultados reales de tus pruebas
+1. Payload que funcionó con parámetro name
+Payload usado:
+?name=<iframe src=javascript:alert('DOM')>
+
+Resultado:
+
+✔ Se abrió un popup con el texto:
+
+DOM
+
+
+Este fue el único payload de los recomendados que te funcionó en el parámetro name.
+
+2. Payloads que NO funcionaron en tu entorno
+
+<img src=x onerror=alert('DOM XSS')>
+
+<svg onload=alert('DOM XSS')>
+
+Payloads combinados o de ejemplo del enunciado
+
+Estos no ejecutaron alertas al colocarlos en ?name=, por lo que se documentan como no efectivos en tu navegador.
+
+3. Payload que funcionó con el fragment (#)
+Payload usado:
+#<img src=x onerror=alert("Fragment XSS")>
+
+Resultado:
+
+✔ Se abrió el popup:
+
+Fragment XSS
+
+
+Esto confirma la vulnerabilidad DOM-based XSS usando fragments, que no viajan al servidor.
+
+Explicación técnica
+Por qué funciona
+
+La página usa innerHTML, lo que permite insertar etiquetas HTML arbitrarias.
+
+Los parámetros de la URL se escriben directamente dentro del DOM.
+
+El contenido no pasa por ningún filtro o sanitización.
+
+Por qué algunos payloads no funcionaron
+
+Cada navegador interpreta diferente elementos inyectados mediante innerHTML.
+
+En tu navegador:
+
+<iframe src=javascript:...> sí ejecuta script
+
+<img onerror> no se ejecutó en este contexto
+
+Algunos navegadores bloquean ciertos elementos por políticas internas.
+
+Impacto
+
+Un atacante podría ejecutar JavaScript arbitrario.
+
+Se pueden robar cookies, tokens, modificar la página o redirigir al usuario.
+
+El servidor nunca ve el ataque: todo es cliente-side.
+
+Mitigación
+
+Usar textContent en vez de innerHTML.
+
+Validar los parámetros de la URL antes de usarlos.
+
+Sanitizar HTML con bibliotecas como DOMPurify.
+
+Evitar usar fragments y parámetros como fuentes de datos.
+
+CSP (Content Security Policy).
 ## ⚠️ ADVERTENCIA IMPORTANTE
 
 **Este laboratorio es INTENCIONALMENTE VULNERABLE y está diseñado EXCLUSIVAMENTE para fines educativos.**
