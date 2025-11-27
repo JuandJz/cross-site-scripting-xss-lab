@@ -356,6 +356,90 @@ Sanitizar HTML con bibliotecas como DOMPurify.
 Evitar usar fragments y parámetros como fuentes de datos.
 
 CSP (Content Security Policy).
+
+
+Ejercicio 4 — XSS Filter Bypass (WAF Evasion)
+Descripción
+
+En este ejercicio se prueba un formulario que aplica un filtro básico para intentar bloquear ataques XSS.
+El filtro elimina patrones específicos como:
+
+<script>
+
+javascript:
+
+onerror
+
+El filtro es insensible a mayúsculas y minúsculas, pero sigue siendo débil porque solo usa una blacklist y no valida el contexto completo del HTML.
+
+El objetivo es encontrar payloads capaces de evadir estas restricciones y ejecutar JavaScript.
+
+Payloads probados y resultados
+
+A continuación se detallan los payloads y el comportamiento real observado en la aplicación:
+
+1. <img src=x onload=alert('Bypass1')>
+
+Resultado: Funciona
+El filtro bloquea onerror, pero no bloquea onload.
+La página ejecutó correctamente la alerta.
+Es un bypass válido.
+
+2. <svg/onload=alert('Bypass2')>
+
+Resultado: No funciona
+La aplicación parece procesar mal la estructura o limpiar la etiqueta svg/, evitando que se renderice y ejecute el evento.
+
+3. <svg%20onload=alert('Bypass3')>
+
+Resultado: Funciona
+El espacio codificado como %20 evade el patrón básico del filtro.
+El navegador decodifica el espacio, interpreta la etiqueta <svg onload=...> y ejecuta el JavaScript.
+
+4. <input onfocus=alert('Bypass4') autofocus>
+
+Resultado: Funciona
+El filtro bloquea onerror, pero no bloquea onfocus.
+La alerta se ejecuta automáticamente gracias al atributo autofocus.
+
+5. <scr<script>ipt>alert('Bypass5')</script>
+
+Resultado: La página queda pegada
+Este payload fragmenta la palabra <script> en partes para evadir el filtro.
+Aunque logra que el navegador intente recomponerlo, provoca un comportamiento inesperado que congela la interfaz.
+Técnicamente es un intento de bypass, pero no genera un popup limpio.
+
+6. %253Cscript%253Ealert('Bypass6')%253C/script%253E
+
+Resultado: No se logró ejecutar
+El payload usa doble codificación, pero la aplicación no decodifica este nivel de forma automática, así que el navegador nunca interpreta el código final.
+
+Conclusión del Ejercicio
+
+De los seis payloads probados, tres lograron ejecutar JavaScript con éxito:
+
+IMG con onload
+
+SVG con espacio codificado
+
+INPUT con onfocus y autofocus
+
+Esto demuestra que el filtro basado en blacklist es insuficiente: al bloquear solo algunas palabras claves como <script> o onerror, permite múltiples vectores alternativos que siguen siendo peligrosos.
+
+Los WAF reales y las defensas modernas deben apoyarse en:
+
+escape contextual
+
+políticas CSP
+
+validación del lado del servidor
+
+sanitización con bibliotecas especializadas
+
+listas blancas, no listas negras
+
+Los resultados confirman que los filtros débiles son fáciles de evadir con pequeñas variaciones en HTML, eventos alternativos y codificación de caracteres.
+
 ## ⚠️ ADVERTENCIA IMPORTANTE
 
 **Este laboratorio es INTENCIONALMENTE VULNERABLE y está diseñado EXCLUSIVAMENTE para fines educativos.**
