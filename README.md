@@ -1,3 +1,15 @@
+# Laboratorio XSS - Análisis de Vulnerabilidades
+
+## Información del Equipo
+- **Integrante 1:** Juan David Jiménez López - @JuandJz
+- **Fecha:** 2025-11-27
+
+---
+
+
+
+
+
 # 🔍 Laboratorio XSS - Sistema Educativo Vulnerable
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
