@@ -4,11 +4,145 @@
 - **Integrante 1:** Juan David Jiménez López - @JuandJz
 - **Fecha:** 2025-11-27
 
----
 
+# Documentación del Proceso – Laboratorio XSS
 
+## 1. Clonación del Repositorio
 
+Primero cloné mi repositorio personal del laboratorio:
 
+```bash
+git clone https://github.com/JuandJz/cross-site-scripting-xss-lab.git
+```
+
+Esto descargó todos los archivos necesarios para el laboratorio XSS.
+
+## 2. Creación de la Rama de Trabajo
+
+Para hacer modificaciones sin afectar la rama principal, creé una nueva rama:
+
+```bash
+git checkout -b feature-readme
+```
+
+## 3. Problema Inicial – Git no tenía configurado mi nombre ni mi correo
+
+Cuando intenté hacer commit:
+
+```bash
+git commit -m "Agregar información del equipo al README"
+```
+
+Git respondió:
+
+```
+Author identity unknown
+fatal: unable to auto-detect email address
+```
+
+Causa: Git necesita saber quién hace los commits.
+
+Solución: Configuré mis datos globalmente:
+
+```bash
+git config --global user.name "Juan David Jiménez López"
+git config --global user.email "feliwinllopsan@gmail.com"
+```
+
+Después de esto, Git aceptó el commit.
+
+## 4. Edición del README
+
+Agregué mi información personal:
+
+- Nombre
+- Usuario de GitHub
+- Fecha de entrega
+
+Luego ejecuté:
+
+```bash
+git add README.md
+git commit -m "Agregar información del equipo al README"
+git push -u origin feature-readme
+```
+
+La rama se subió correctamente a GitHub.
+
+## 5. Creación de Entorno Virtual (venv)
+
+Para trabajar el laboratorio de forma aislada:
+
+```bash
+python -m venv venv
+```
+
+Activación del entorno virtual en Git Bash (Windows):
+
+```bash
+source venv/Scripts/activate
+```
+
+Apareció el prefijo `(venv)` indicando que estaba activo.
+
+## 6. Instalación de Dependencias
+
+Instalé los paquetes necesarios:
+
+```bash
+pip install -r requirements.txt
+```
+
+La instalación terminó sin errores.
+
+## 7. Inicialización de la Base de Datos
+
+Ejecuté:
+
+```bash
+python database.py
+```
+
+Salida del sistema:
+
+```
+Base de datos inicializada correctamente
+Usuarios de prueba creados correctamente
+Comentarios de prueba cargados correctamente
+```
+
+## 8. Ejecución del Servidor
+
+Para iniciar el laboratorio:
+
+```bash
+python main.py
+```
+
+Salida:
+
+```
+Base de datos inicializada correctamente
+
+    ╔═══════════════════════════════════════════════════════════╗
+    ║  🔍 LABORATORIO XSS - SISTEMA VULNERABLE                  ║
+    ║                                                           ║
+    ║  ⚠️  ADVERTENCIA: Aplicación intencionalmente vulnerable  ║
+    ║     Solo para uso educativo                               ║
+    ║                                                           ║
+    ║  🌐 Servidor iniciando en: http://localhost:8000         ║
+    ╚═══════════════════════════════════════════════════════════╝
+
+INFO:     Started server process
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000
+INFO:     127.0.0.1 - "GET / HTTP/1.1" 200 OK
+```
+
+El laboratorio se ejecutó correctamente en:
+
+http://localhost:8000
 
 # 🔍 Laboratorio XSS - Sistema Educativo Vulnerable
 
