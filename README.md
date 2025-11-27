@@ -185,6 +185,57 @@ Payload:
 
 Resultado: Ejercicio exitoso.
 
+
+El ataque funciona porque el valor ingresado en el campo de búsqueda se refleja directamente en el HTML sin ningún proceso de sanitización o escape. Esto permite que el navegador interprete el input como código HTML/JS. El impacto podría incluir robo de cookies, redirección, modificación del DOM, etc. Para prevenirlo, se debe aplicar escape de caracteres, validación del input y políticas CSP
+
+
+
+Ejercicio 2 — Stored XSS
+Problema generado por payload con autofocus
+Payload utilizado
+<input onfocus=alert('XSS') autofocus>
+
+Descripción del comportamiento
+
+Después de enviar este payload a través del formulario del ejercicio Stored XSS, la página /stored se quedó mostrando un popup infinito de alert('XSS').
+
+Incluso después de cerrar el navegador o borrar la URL, cada vez que se abría nuevamente la ruta /stored, el popup seguía apareciendo, impidiendo totalmente el acceso a la página.
+
+Además, el navegador quedaba “pegado” porque el evento se activaba repetidamente.
+
+Por qué ocurrió esto
+
+Este es un caso de Stored Cross-Site Scripting (XSS).
+El payload fue almacenado en la base de datos (xss_lab.db). Por lo tanto:
+
+La página cargaba el contenido desde la base de datos.
+
+Ese contenido incluía un <input> con:
+
+autofocus: el input se enfoca automáticamente al cargar la página.
+
+onfocus=alert('XSS'): ejecuta un alert() cuando recibe el foco.
+
+Cada vez que se cerraba el popup, el elemento seguía enfocado.
+
+Al seguir enfocado → ejecutaba el evento otra vez → otro popup.
+
+Esto generó un bucle infinito de alertas, propio de un Stored XSS persistente.
+
+
+Conclusión
+
+Este error demuestra cómo un XSS almacenado puede:
+
+persistir aun cerrando y reabriendo el navegador,
+
+inutilizar secciones completas de una aplicación,
+
+ejecutarse repetidamente sin intervención del usuario.
+
+El payload elegido fue especialmente problemático debido a la combinación de autofocus + onfocus, lo cual generó un loop de ejecución automática.
+
+
 ## ⚠️ ADVERTENCIA IMPORTANTE
 
 **Este laboratorio es INTENCIONALMENTE VULNERABLE y está diseñado EXCLUSIVAMENTE para fines educativos.**
